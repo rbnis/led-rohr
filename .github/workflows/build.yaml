@@ -15,5 +15,5 @@ jobs:
           ./esp-idf/install.sh
       - name: build
         run: |
-          . ./setup_env.sh
+          . ./setup-env.sh
           make -j$(nproc)
