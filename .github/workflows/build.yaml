@@ -5,15 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: install esp-idf toolchain
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Setup build environment
         run: |
-          sudo apt-get install -y -qqq libncurses5-dev gperf
+          sudo pip3 install virtualenv
           ./esp-idf/install.sh
-      - name: build
+      - name: Build
         run: |
-          . ./setup-env.sh
-          make -j$(nproc)
+          source ./esp-idf/export.sh
+          idf.py build
