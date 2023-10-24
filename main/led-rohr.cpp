@@ -9,6 +9,7 @@
 #include "menu.h"
 #include "Button.h"
 #include "RotaryEncoder.h"
+#include "settings.h"
 
 #define PIXEL_PIN GPIO_NUM_14
 #define PIXEL_NUM 10
@@ -29,6 +30,8 @@ extern "C" void app_main()
 {
   initArduino();
 
+  Settings settings;
+
   Adafruit_NeoPixel pixels(PIXEL_NUM, PIXEL_PIN, NEO_GRBW + NEO_KHZ800);
   pixels.begin();
   pixels.clear();
@@ -39,7 +42,7 @@ extern "C" void app_main()
   display.display();
 
   ScreenManager screenManager;
-  screenManager.pushScreen(new MenuScreen());
+  screenManager.pushScreen(new MenuScreen(&settings));
 
   RotaryEncoder rotaryEncoder(ROTARY_ENCODER_GPIO_A, ROTARY_ENCODER_GPIO_B, ROTARY_ENCODER_PULSES_PER_SNAP);
   rotaryEncoder.onKnobTurn = [&screenManager](int count) {

@@ -4,6 +4,7 @@
 #include <array>
 
 #include "ScreenManager.h"
+#include "settings.h"
 
 void defaultTextSettings(Adafruit_SSD1306 *display)
 {
@@ -27,23 +28,29 @@ void renderLabeledValue(Adafruit_SSD1306 *display, String label, String value)
 class DmxChannelMenuScreen : public Screen
 {
 protected:
-  int value = 0;
+  Settings *settings;
 
 public:
+  DmxChannelMenuScreen(Settings *settings)
+  {
+    this->settings = settings;
+  }
+
   void draw(Adafruit_SSD1306 *display)
   {
     display->clearDisplay();
-    renderLabeledValue(display, "DMX Channel", String(value));
+    renderLabeledValue(display, "DMX Channel", String(settings->dmxChannel));
     display->display();
   }
 
   void onKnobTurnCorse(int count)
   {
-    value = (value + count) % 512;
+    settings->dmxChannel = (settings->dmxChannel + count) % 512;
   }
 
   void onKnobPress()
   {
+    settings->save();
     screenManager->popScreen();
   }
 };
@@ -51,23 +58,29 @@ public:
 class DmxUniverseMenuScreen : public Screen
 {
 protected:
-  int value = 0;
+  Settings *settings;
 
 public:
+  DmxUniverseMenuScreen(Settings *settings)
+  {
+    this->settings = settings;
+  }
+
   void draw(Adafruit_SSD1306 *display)
   {
     display->clearDisplay();
-    renderLabeledValue(display, "DMX Universe", String(value));
+    renderLabeledValue(display, "DMX Universe", String(settings->dmxUniverse));
     display->display();
   }
 
   void onKnobTurnCorse(int count)
   {
-    value = (value + count) % 512;
+    settings->dmxUniverse = (settings->dmxUniverse + count) % 512;
   }
 
   void onKnobPress()
   {
+    settings->save();
     screenManager->popScreen();
   }
 };
@@ -87,6 +100,11 @@ protected:
   DmxUniverseMenuScreen dmxUniverseMenuScreen;
 
 public:
+  MenuScreen(Settings *settings): dmxChannelMenuScreen(settings), dmxUniverseMenuScreen(settings)
+  {
+
+  }
+
   void init()
   {
     this->pages = std::array<MenuPage, 2>{
