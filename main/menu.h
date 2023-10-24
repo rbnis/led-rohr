@@ -83,6 +83,8 @@ class MenuScreen : public Screen
 protected:
   int currentPageIdx = 0;
   std::array<MenuPage, 2> pages;
+  DmxChannelMenuScreen dmxChannelMenuScreen;
+  DmxUniverseMenuScreen dmxUniverseMenuScreen;
 
 public:
   void init()
@@ -90,14 +92,14 @@ public:
     this->pages = std::array<MenuPage, 2>{
       MenuPage {
         .title = "DMX\nChannel",
-        .action = [*this]() {
-          screenManager->pushScreen(new DmxChannelMenuScreen());
+        .action = [this]() {
+          screenManager->pushScreen(&dmxChannelMenuScreen);
         }
       },
       MenuPage {
         .title = "DMX\nUniverse",
-        .action = [*this]() {
-          screenManager->pushScreen(new DmxUniverseMenuScreen());
+        .action = [this]() {
+          screenManager->pushScreen(&dmxUniverseMenuScreen);
         }
       }
     };
